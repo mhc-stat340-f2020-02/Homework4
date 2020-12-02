@@ -1,0 +1,45 @@
+---
+title: 'Homework 4: Mixed Effects Models'
+subtitle: 'STAT 340: Applied Regression'
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(car)
+library(dplyr)
+library(lme4)
+library(nlme)
+library(lattice)
+
+data("MathAchieve")
+str(MathAchieve)
+
+## Recalculate Mean SES
+Temp <- MathAchieve %>%
+  group_by(School) %>%
+  summarize(mean.ses=mean(SES))
+Temp <- merge(MathAchSchool, Temp, by="School")
+
+
+HSB <- merge(Temp[, c("School", "Sector", "mean.ses")],
+             MathAchieve[,c("School", "SES", "MathAch")], by="School")
+
+## Create school-centered SES variable
+HSB$cses <- with(HSB, SES-mean.ses)
+
+## Re-level Sector variable 
+HSB$Sector <- factor(HSB$Sector, levels=c("Public", "Catholic"))
+```
+
+### (Adapted from Exercise 23.1, J. Fox, 3rd Edition) Using the estimated fixed effects listed in the table on page 715 for the model fit to the High School and Beyond data, find the fixed-effects regression equations for typical low (-0.7), medium (0), and high (0.7) mean SES Catholic and public schools, as plotted in Figure 23.6. In total, you should have six equations.
+
+
+
+### Recreate the plots from Figure 23.6. You may find it useful to use the effect display plots that we have seen to examine interactions in earlier notes.
+
+
+
+### Interpret the plots from Figure 23.6. Specifically, comment on the general patterns you see with regard to the effects of centered SES on math achievement score for Public and Catholic schools. How do they change as a function of mean SES?
+
